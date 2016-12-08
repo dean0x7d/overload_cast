@@ -95,7 +95,29 @@ overload_<int>{}(foo);   // C++11
 
 Note the `{}` in the C++11 version.
 The C++14 implementation uses variable templates to get the nicer syntax.
-Take a look at the header file for details.
+Take a look at the `overload_cast.hpp` file for details.
+
+
+## Alternative syntax
+
+An alternative which works uniformly with C++11 and C++14 is available in `resolve.hpp`.
+This one abuses operator overloading to resolve the overload set:
+
+```c++
+#include "resolve.hpp"
+
+take_function(overload_cast<int>(foo));
+take_function(foo | resolve<int>());
+
+take_function(overload_cast<int>(&Widget::foo));
+take_function(&Widget::foo | resolve<int>());
+
+take_function(overload_cast<int>(&Widget::foo, const_));
+take_function(&Widget::foo | resolve_const<int>());
+```
+
+Treating `|` as the pipe operator is becoming more popular in C++, so this syntax shouldn't be completely surprising.
+However, it is still a significant departure from the usual C++ cast syntax.
 
 
 ## Usefulness
